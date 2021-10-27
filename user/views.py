@@ -13,7 +13,6 @@ from django.core import serializers
 # Create your views here.
 @api_view(['POST'])
 def register(request):
-    logging.info('Registration %s' % request.data)
     serializer = RegisterSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
