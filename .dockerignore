@@ -1,0 +1,10 @@
+__pychche__
+storage
+*.log
+logs
+
+# web build ignore
+web/.git
+web/node_modules
+web/tests
+web/build

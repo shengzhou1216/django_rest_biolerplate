@@ -1,4 +1,4 @@
-"""app URL Configuration
+"""django_rest_biolerplate URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -15,27 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from rest_framework import routers
-from app import settings
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from core import views as CroeViews
 from user import views as UserViews
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework import routers
+from core import views as CoreViews
 
 # custome error view
-handler404 = CroeViews.custom404
+handler404 = CoreViews.custom404
 handler500 = 'rest_framework.exceptions.server_error'
-
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViews.UserViewSet)
 
 urlpatterns = [
-    path('hello/', CroeViews.hello),
+    path('hello/', CoreViews.hello),
     path('api/', include(router.urls)),
     path('api/auth/register/', UserViews.register),
     path('api/auth/login/', UserViews.login),
     path('api/auth/info/', UserViews.info),
 ]
 
-if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()

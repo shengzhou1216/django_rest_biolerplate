@@ -1,0 +1,16 @@
+
+
+FROM node:16.6.2 as WebBuilder
+
+WORKDIR /web-app/
+COPY web .
+
+RUN yarn install --registry=https://registry.npm.taobao.org
+RUN yarn build:prod
+
+FROM nginx:1.21-alpine
+
+# copy web app
+COPY --from=WebBuilder /web-app/dist /usr/share/nginx/html
+
+COPY nginx/my.conf /etc/nginx/conf.d/my.conf

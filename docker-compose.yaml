@@ -1,0 +1,49 @@
+version: "3"
+
+volumes:
+  db_data:
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  server:
+    user: "${UID}:${GID}"
+    build: .
+    container_name: server
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn django_rest_biolerplate.wsgi -b  0.0.0.0:8000
+    volumes:
+      - <your project path>:/usr/src/app
+    ports:
+      - 8000:8000
+    env_file:
+      - .env.dev
+    depends_on:
+      - mongo
+    networks:
+      - my-network
+    
+
+  nginx:
+    build: 
+      context: .
+      dockerfile: Dockerfile.nginx
+    volumes:
+      - <your project path>:/usr/src/app
+    ports:
+      - 5555:8080
+    depends_on:
+      - server
+    networks:
+      - my-network
+
+  mongo:
+    image: mongo:4.0
+    container_name: mongo
+    restart: unless-stopped
+    volumes:
+      - db_data:/data/db
+    networks:
+      - my-network
